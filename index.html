@@ -8,6 +8,11 @@
     content="width=device-width, initial-scale=1.0"
   />
 
+  <meta
+    name="referrer"
+    content="strict-origin-when-cross-origin"
+  />
+
   <title>YouTubeプレイヤー</title>
 
   <link rel="stylesheet" href="style.css" />
@@ -17,64 +22,70 @@
   <main class="app">
     <h1>YouTubeプレイヤー</h1>
 
-   <section class="registerArea">
-  <h2>動画を登録</h2>
+    <div class="pageLayout">
+      <div class="leftColumn">
+        <section class="playerArea">
+          <div class="videoWrapper">
+            <iframe
+              id="youtubePlayer"
+              src=""
+              title="YouTube動画プレイヤー"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+            ></iframe>
 
-  <label for="videoTitle">表示する名前</label>
+            <p id="emptyMessage">
+              リストから動画を選択してください
+            </p>
+          </div>
 
-  <input
-    id="videoTitle"
-    type="text"
-    placeholder="例：オープニング動画"
-  />
+          <h2 id="playingTitle">
+            再生中の動画はありません
+          </h2>
+        </section>
 
-  <label for="youtubeUrl">YouTubeのURL</label>
+        <section class="registerArea">
+          <h2>動画を登録</h2>
 
-  <input
-    id="youtubeUrl"
-    type="text"
-    placeholder="https://www.youtube.com/watch?v=..."
-  />
+          <label for="videoTitle">
+            表示する名前
+          </label>
 
-  <button id="addButton">
-    リストに登録
-  </button>
+          <input
+            id="videoTitle"
+            type="text"
+            placeholder="例：オープニング動画"
+          />
 
-  <p id="errorMessage"></p>
-</section>
+          <label for="youtubeUrl">
+            YouTubeのURL
+          </label>
 
-<div class="mainContent">
-  <section class="playerArea">
-    <div class="videoWrapper">
-      <iframe
-        id="youtubePlayer"
-        src=""
-        title="YouTube動画プレイヤー"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        referrerpolicy="strict-origin-when-cross-origin"
-        allowfullscreen
-      ></iframe>
+          <input
+            id="youtubeUrl"
+            type="text"
+            placeholder="https://www.youtube.com/watch?v=..."
+          />
 
-      <p id="emptyMessage">
-        リストから動画を選択してください
-      </p>
+          <button id="addButton">
+            リストに登録
+          </button>
+
+          <p id="errorMessage"></p>
+        </section>
+      </div>
+
+      <section class="listArea">
+        <h2>動画リスト</h2>
+
+        <div id="videoList">
+          <p class="emptyList">
+            登録されている動画はありません
+          </p>
+        </div>
+      </section>
     </div>
-
-    <h2 id="playingTitle">
-      再生中の動画はありません
-    </h2>
-  </section>
-
-  <section class="listArea">
-    <h2>動画リスト</h2>
-
-    <div id="videoList">
-      <p class="emptyList">
-        登録されている動画はありません
-      </p>
-    </div>
-  </section>
-</div> 
   </main>
 
   <script src="script.js"></script>

@@ -184,4 +184,10 @@ h1 {
   max-height: 700px;
   overflow-y: auto;
 }
+.pageLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 18px;
+  align-items: start;
+}
 }
