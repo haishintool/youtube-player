@@ -76,7 +76,7 @@ button {
   flex-direction: column;
   gap: 0;
   min-width: 0;
-  height: calc(100% - 17px);
+  height: calc(100% - 18px);
 }
 
 
