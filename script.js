@@ -29,6 +29,7 @@ const errorMessage =
   document.getElementById("errorMessage");
 
 let videos = loadVideos();
+let sortable = null;
 
 const icons = {
   play: `
@@ -109,6 +110,22 @@ const icons = {
         stroke-width="1.8"
         stroke-linecap="round"
       />
+    </svg>
+  `,
+
+  drag: `
+    <svg
+      viewBox="0 0 12 20"
+      aria-hidden="true"
+    >
+      <circle cx="3" cy="3" r="1.2" />
+      <circle cx="9" cy="3" r="1.2" />
+
+      <circle cx="3" cy="10" r="1.2" />
+      <circle cx="9" cy="10" r="1.2" />
+
+      <circle cx="3" cy="17" r="1.2" />
+      <circle cx="9" cy="17" r="1.2" />
     </svg>
   `
 };
@@ -269,6 +286,8 @@ function playVideo(video) {
 
   playingTitle.textContent =
     video.title;
+
+  renderVideoList();
 }
 
 function editVideo(videoId) {
@@ -435,6 +454,7 @@ function createIconButton({
     document.createElement("button");
 
   button.type = "button";
+
   button.className =
     `iconButton ${className}`;
 
@@ -452,6 +472,86 @@ function createIconButton({
   );
 
   return button;
+}
+
+function createDragHandle(videoTitle) {
+  const dragHandle =
+    document.createElement("button");
+
+  dragHandle.type = "button";
+  dragHandle.className = "dragHandle";
+  dragHandle.innerHTML = icons.drag;
+
+  dragHandle.title =
+    `${videoTitle}を並べ替え`;
+
+  dragHandle.setAttribute(
+    "aria-label",
+    `${videoTitle}をドラッグして並べ替え`
+  );
+
+  return dragHandle;
+}
+
+function initializeSortable() {
+  if (
+    typeof Sortable === "undefined" ||
+    sortable
+  ) {
+    return;
+  }
+
+  sortable = new Sortable(
+    videoListElement,
+    {
+      animation: 180,
+      handle: ".dragHandle",
+
+      draggable: ".videoItem",
+
+      ghostClass: "dragGhost",
+      chosenClass: "dragChosen",
+      dragClass: "dragging",
+
+      forceFallback: false,
+
+      onEnd(event) {
+        const oldIndex =
+          event.oldIndex;
+
+        const newIndex =
+          event.newIndex;
+
+        if (
+          oldIndex === undefined ||
+          newIndex === undefined ||
+          oldIndex === newIndex
+        ) {
+          return;
+        }
+
+        const movedVideo =
+          videos.splice(
+            oldIndex,
+            1
+          )[0];
+
+        if (!movedVideo) {
+          renderVideoList();
+          return;
+        }
+
+        videos.splice(
+          newIndex,
+          0,
+          movedVideo
+        );
+
+        saveVideos();
+        renderVideoList();
+      }
+    }
+  );
 }
 
 function renderVideoList() {
@@ -481,6 +581,9 @@ function renderVideoList() {
     item.className =
       "videoItem";
 
+    item.dataset.videoId =
+      video.id;
+
     if (
       youtubePlayer.dataset.currentVideoId ===
       video.id
@@ -489,6 +592,11 @@ function renderVideoList() {
         "isPlaying"
       );
     }
+
+    const dragHandle =
+      createDragHandle(
+        video.title
+      );
 
     const videoName =
       document.createElement("span");
@@ -520,7 +628,6 @@ function renderVideoList() {
         label: `${video.title}を再生`,
         onClick: () => {
           playVideo(video);
-          renderVideoList();
         }
       });
 
@@ -556,8 +663,17 @@ function renderVideoList() {
       deleteButton
     );
 
-    item.appendChild(videoName);
-    item.appendChild(buttonGroup);
+    item.appendChild(
+      dragHandle
+    );
+
+    item.appendChild(
+      videoName
+    );
+
+    item.appendChild(
+      buttonGroup
+    );
 
     videoListElement.appendChild(
       item
@@ -603,3 +719,4 @@ videoTitleInput.addEventListener(
 );
 
 renderVideoList();
+initializeSortable();

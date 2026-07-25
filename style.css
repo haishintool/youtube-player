@@ -141,8 +141,6 @@ button {
     );
 
   border: 1px solid #41444b;
-
-  /* 動画部分だけ完全な直角 */
   border-radius: 0;
 
   box-shadow:
@@ -396,6 +394,7 @@ button {
 
 #sortButton.sortCompleted {
   color: #ffffff;
+
   background:
     linear-gradient(
       180deg,
@@ -461,7 +460,6 @@ button {
 .videoName {
   flex: 1;
   min-width: 0;
-
   overflow: hidden;
 
   color: #e3e4e7;
@@ -583,6 +581,71 @@ button {
     0 0 15px rgba(229, 35, 45, 0.17);
 }
 
+/* 6ドットのドラッグハンドル */
+.dragHandle {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  width: 24px;
+  height: 34px;
+  padding: 0;
+
+  color: #70757f;
+
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+
+  background: transparent;
+  border: none;
+  border-radius: 5px;
+
+  transition:
+    color 0.15s ease,
+    background 0.15s ease,
+    transform 0.15s ease;
+}
+
+.dragHandle svg {
+  width: 12px;
+  height: 20px;
+
+  fill: currentColor;
+  pointer-events: none;
+}
+
+.dragHandle:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+  transform: scale(1.08);
+}
+
+.dragHandle:active {
+  color: var(--red-light);
+  cursor: grabbing;
+}
+
+/* ドラッグ中の表示 */
+.dragGhost {
+  opacity: 0.28;
+}
+
+.dragChosen {
+  border-color: rgba(229, 35, 45, 0.85);
+
+  box-shadow:
+    0 0 0 1px rgba(229, 35, 45, 0.16),
+    0 0 20px rgba(229, 35, 45, 0.35);
+
+  cursor: grabbing;
+}
+
+.dragging {
+  opacity: 0.9;
+}
+
 .emptyList {
   margin: 42px 0;
 
@@ -641,8 +704,8 @@ button {
   }
 
   .videoItem {
-    gap: 9px;
-    padding: 10px;
+    gap: 7px;
+    padding: 10px 8px;
   }
 
   .videoName {
@@ -655,6 +718,11 @@ button {
 
   .iconButton {
     width: 33px;
+    height: 32px;
+  }
+
+  .dragHandle {
+    width: 22px;
     height: 32px;
   }
 }
