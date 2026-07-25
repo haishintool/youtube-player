@@ -37,14 +37,16 @@ h1 {
     gap: 18px;
 }
 
-.leftColumn {
+.rightColumn {
+  display: grid;
+  gap: 18px;
   min-width: 0;
 }
 
 .playerArea,
 .registerArea,
 .listArea {
-  margin-bottom: 24px;
+  margin-bottom: 0;
   padding: 24px;
   background: #1c1f26;
   border-radius: 14px;
@@ -55,8 +57,8 @@ h1 {
 }
 
 .listArea {
-  max-height: calc(100vh - 130px);
-  margin-bottom: 0;
+  min-height: 400px;
+  max-height: calc(100vh - 420px);
   overflow-y: auto;
 }
 

@@ -22,70 +22,70 @@
   <main class="app">
     <h1>YouTubeプレイヤー</h1>
 
-    <div class="pageLayout">
-      <div class="leftColumn">
-        <section class="playerArea">
-          <div class="videoWrapper">
-            <iframe
-              id="youtubePlayer"
-              src=""
-              title="YouTube動画プレイヤー"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              referrerpolicy="strict-origin-when-cross-origin"
-              allowfullscreen
-            ></iframe>
+<div class="pageLayout">
+  <section class="playerArea">
+    <div class="videoWrapper">
+      <iframe
+        id="youtubePlayer"
+        src=""
+        title="YouTube動画プレイヤー"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen
+      ></iframe>
 
-            <p id="emptyMessage">
-              リストから動画を選択してください
-            </p>
-          </div>
-
-          <h2 id="playingTitle">
-            再生中の動画はありません
-          </h2>
-        </section>
-
-        <section class="registerArea">
-          <h2>動画を登録</h2>
-
-          <label for="videoTitle">
-            表示する名前
-          </label>
-
-          <input
-            id="videoTitle"
-            type="text"
-            placeholder="例：オープニング動画"
-          />
-
-          <label for="youtubeUrl">
-            YouTubeのURL
-          </label>
-
-          <input
-            id="youtubeUrl"
-            type="text"
-            placeholder="https://www.youtube.com/watch?v=..."
-          />
-
-          <button id="addButton">
-            リストに登録
-          </button>
-
-          <p id="errorMessage"></p>
-        </section>
-      </div>
-
-      <section class="listArea">
-        <h2>動画リスト</h2>
-
-        <div id="videoList">
-          <p class="emptyList">
-            登録されている動画はありません
-          </p>
-        </div>
-      </section>
+      <p id="emptyMessage">
+        リストから動画を選択してください
+      </p>
     </div>
+
+    <h2 id="playingTitle">
+      再生中の動画はありません
+    </h2>
+  </section>
+
+  <div class="rightColumn">
+    <section class="registerArea">
+      <h2>動画を登録</h2>
+
+      <label for="videoTitle">
+        表示する名前
+      </label>
+
+      <input
+        id="videoTitle"
+        type="text"
+        placeholder="例：オープニング動画"
+      />
+
+      <label for="youtubeUrl">
+        YouTubeのURL
+      </label>
+
+      <input
+        id="youtubeUrl"
+        type="text"
+        placeholder="https://www.youtube.com/watch?v=..."
+      />
+
+      <button id="addButton">
+        リストに登録
+      </button>
+
+      <p id="errorMessage"></p>
+    </section>
+
+    <section class="listArea">
+      <h2>動画リスト</h2>
+
+      <div id="videoList">
+        <p class="emptyList">
+          登録されている動画はありません
+        </p>
+      </div>
+    </section>
+  </div>
+</div>
   </main>
 
   <script src="script.js"></script>
