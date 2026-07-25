@@ -20,7 +20,7 @@ input {
 }
 
 .app {
-  width: min(100%, 1400px);
+  width: min(96vw, 1800px);
   margin: 0 auto;
 }
 
@@ -32,7 +32,7 @@ h1 {
 
 .pageLayout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 420px;
+  grid-template-columns: minmax(0, 1fr) 500px;
   gap: 18px;
   align-items: start;
 }
