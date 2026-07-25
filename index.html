@@ -15,18 +15,18 @@
 
   <title>YouTubeプレイヤー</title>
 
-  <link rel="stylesheet" href="style.css" />
+  <link
+    rel="apple-touch-icon"
+    href="youtube-player-logo.png"
+  />
 
   <link
-  rel="apple-touch-icon"
-  href="youtube-player-logo.png"
-/>
+    rel="icon"
+    type="image/png"
+    href="youtube-player-logo.png"
+  />
 
-<link
-  rel="icon"
-  type="image/png"
-  href="youtube-player-logo.png"
-/>
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
@@ -48,6 +48,10 @@
             リストから動画を選択してください
           </p>
         </div>
+
+        <p id="playingTitle">
+          再生中の動画はありません
+        </p>
       </section>
 
       <div class="rightColumn">
@@ -60,6 +64,7 @@
           <input
             id="videoTitle"
             type="text"
+            autocomplete="off"
           />
 
           <label for="videoYomi">
@@ -69,6 +74,7 @@
           <input
             id="videoYomi"
             type="text"
+            autocomplete="off"
           />
 
           <label for="youtubeUrl">
@@ -79,13 +85,20 @@
             id="youtubeUrl"
             type="text"
             placeholder="https://www.youtube.com/watch?v=..."
+            autocomplete="off"
           />
 
-          <button id="addButton">
+          <button
+            id="addButton"
+            type="button"
+          >
             リストに登録
           </button>
 
-          <p id="errorMessage"></p>
+          <p
+            id="errorMessage"
+            aria-live="polite"
+          ></p>
         </section>
 
         <section class="listArea">
@@ -111,6 +124,6 @@
     </div>
   </main>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=3"></script>
 </body>
 </html>
