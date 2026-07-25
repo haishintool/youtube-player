@@ -20,7 +20,8 @@ input {
 }
 
 .app {
-  width: min(96vw, 1800px);
+  width: calc(100vw - 24px);
+  max-width: none;
   margin: 0 auto;
 }
 
@@ -31,10 +32,9 @@ h1 {
 }
 
 .pageLayout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 500px;
-  gap: 18px;
-  align-items: start;
+    display: grid;
+    grid-template-columns: minmax(0,1fr) 520px;
+    gap: 18px;
 }
 
 .leftColumn {
@@ -192,7 +192,7 @@ h1 {
 
 @media (max-width: 600px) {
   body {
-    padding: 20px 10px;
+    padding: 12px;
   }
 
   .playerArea,
