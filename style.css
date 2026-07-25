@@ -74,12 +74,9 @@ button {
 .rightColumn {
   display: flex;
   flex-direction: column;
-
   gap: 0;
-
   min-width: 0;
-
-  height: 100%;
+  height: calc(100% - 2px);
 }
 
 
