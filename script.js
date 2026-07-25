@@ -28,6 +28,21 @@ const playingTitle =
 const errorMessage =
   document.getElementById("errorMessage");
 
+const registerTabButton =
+  document.getElementById("registerTabButton");
+
+const listTabButton =
+  document.getElementById("listTabButton");
+
+const registerTabPanel =
+  document.getElementById("registerTabPanel");
+
+const listTabPanel =
+  document.getElementById("listTabPanel");
+
+const TAB_STORAGE_KEY =
+  "youtubePlayerActiveTab";
+
 let videos = loadVideos();
 let sortable = null;
 
@@ -178,6 +193,89 @@ function clearError() {
   errorMessage.textContent = "";
 }
 
+
+function getSavedTab() {
+  const savedTab =
+    localStorage.getItem(
+      TAB_STORAGE_KEY
+    );
+
+  return savedTab === "register"
+    ? "register"
+    : "list";
+}
+
+function switchTab(
+  tabName,
+  {
+    save = true,
+    focus = false
+  } = {}
+) {
+  const showRegister =
+    tabName === "register";
+
+  registerTabButton.classList.toggle(
+    "isActive",
+    showRegister
+  );
+
+  listTabButton.classList.toggle(
+    "isActive",
+    !showRegister
+  );
+
+  registerTabButton.setAttribute(
+    "aria-selected",
+    String(showRegister)
+  );
+
+  listTabButton.setAttribute(
+    "aria-selected",
+    String(!showRegister)
+  );
+
+  registerTabPanel.classList.toggle(
+    "isActive",
+    showRegister
+  );
+
+  listTabPanel.classList.toggle(
+    "isActive",
+    !showRegister
+  );
+
+  registerTabPanel.hidden =
+    !showRegister;
+
+  listTabPanel.hidden =
+    showRegister;
+
+  if (sortable) {
+    sortable.option(
+      "disabled",
+      showRegister
+    );
+  }
+
+  if (save) {
+    localStorage.setItem(
+      TAB_STORAGE_KEY,
+      showRegister
+        ? "register"
+        : "list"
+    );
+  }
+
+  if (focus) {
+    if (showRegister) {
+      videoTitleInput.focus();
+    } else {
+      listTabButton.focus();
+    }
+  }
+}
+
 function getYouTubeVideoId(urlText) {
   try {
     const url = new URL(urlText.trim());
@@ -268,7 +366,7 @@ function addVideo() {
   videoYomiInput.value = "";
   youtubeUrlInput.value = "";
 
-  videoTitleInput.focus();
+  switchTab("list");
 }
 
 function playVideo(video) {
@@ -681,6 +779,26 @@ function renderVideoList() {
   });
 }
 
+registerTabButton.addEventListener(
+  "click",
+  () => {
+    switchTab(
+      "register",
+      { focus: true }
+    );
+  }
+);
+
+listTabButton.addEventListener(
+  "click",
+  () => {
+    switchTab(
+      "list",
+      { focus: true }
+    );
+  }
+);
+
 addButton.addEventListener(
   "click",
   addVideo
@@ -720,3 +838,8 @@ videoTitleInput.addEventListener(
 
 renderVideoList();
 initializeSortable();
+
+switchTab(
+  getSavedTab(),
+  { save: false }
+);
