@@ -20,68 +20,85 @@
 
 <body>
   <main class="app">
+    <div class="pageLayout">
 
-<div class="pageLayout">
-  <section class="playerArea">
-    <div class="videoWrapper">
-      <iframe
-        id="youtubePlayer"
-        src=""
-        title="YouTube動画プレイヤー"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        referrerpolicy="strict-origin-when-cross-origin"
-        allowfullscreen
-      ></iframe>
+      <section class="playerArea">
+        <div class="videoWrapper">
+          <iframe
+            id="youtubePlayer"
+            src=""
+            title="YouTube動画プレイヤー"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+          ></iframe>
 
-      <p id="emptyMessage">
-        リストから動画を選択してください
-      </p>
-    </div>
+          <p id="emptyMessage">
+            リストから動画を選択してください
+          </p>
+        </div>
+      </section>
 
-    <h2 id="playingTitle">
-      再生中の動画はありません
-    </h2>
-  </section>
+      <div class="rightColumn">
 
-  <div class="rightColumn">
-    <section class="registerArea">
-      <label for="videoTitle">
-        登録名
-      </label>
+        <section class="registerArea">
+          <label for="videoTitle">
+            登録名
+          </label>
 
-      <input
-        id="videoTitle"
-        type="text"
-      />
+          <input
+            id="videoTitle"
+            type="text"
+          />
 
-      <label for="youtubeUrl">
-        YouTubeのURL
-      </label>
+          <label for="videoYomi">
+            よみがな
+          </label>
 
-      <input
-        id="youtubeUrl"
-        type="text"
-        placeholder="https://www.youtube.com/watch?v=..."
-      />
+          <input
+            id="videoYomi"
+            type="text"
+            placeholder="例：れもん"
+          />
 
-      <button id="addButton">
-        リストに登録
-      </button>
+          <label for="youtubeUrl">
+            YouTubeのURL
+          </label>
 
-      <p id="errorMessage"></p>
-    </section>
+          <input
+            id="youtubeUrl"
+            type="text"
+            placeholder="https://www.youtube.com/watch?v=..."
+          />
 
-    <section class="listArea">
-      <h2>動画リスト</h2>
+          <button id="addButton">
+            リストに登録
+          </button>
 
-      <div id="videoList">
-        <p class="emptyList">
-          登録されている動画はありません
-        </p>
+          <p id="errorMessage"></p>
+        </section>
+
+        <section class="listArea">
+          <div class="listHeader">
+            <h2>動画リスト</h2>
+
+            <button
+              id="sortButton"
+              type="button"
+            >
+              五十音順
+            </button>
+          </div>
+
+          <div id="videoList">
+            <p class="emptyList">
+              登録されている動画はありません
+            </p>
+          </div>
+        </section>
+
       </div>
-    </section>
-  </div>
-</div>
+    </div>
   </main>
 
   <script src="script.js"></script>

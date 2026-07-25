@@ -1,6 +1,9 @@
 const videoTitleInput = document.getElementById("videoTitle");
+const videoYomiInput = document.getElementById("videoYomi");
 const youtubeUrlInput = document.getElementById("youtubeUrl");
+
 const addButton = document.getElementById("addButton");
+const sortButton = document.getElementById("sortButton");
 const videoListElement = document.getElementById("videoList");
 
 const youtubePlayer = document.getElementById("youtubePlayer");
@@ -18,9 +21,25 @@ function loadVideos() {
   }
 
   try {
-    return JSON.parse(savedVideos);
+    const parsedVideos = JSON.parse(savedVideos);
+
+    if (!Array.isArray(parsedVideos)) {
+      return [];
+    }
+
+    return parsedVideos.map((video) => ({
+      ...video,
+      yomi:
+        typeof video.yomi === "string"
+          ? video.yomi
+          : ""
+    }));
   } catch (error) {
-    console.error("保存データの読み込みに失敗しました。", error);
+    console.error(
+      "保存データの読み込みに失敗しました。",
+      error
+    );
+
     return [];
   }
 }
@@ -73,6 +92,7 @@ function getYouTubeVideoId(urlText) {
 
 function addVideo() {
   const title = videoTitleInput.value.trim();
+  const yomi = videoYomiInput.value.trim();
   const url = youtubeUrlInput.value.trim();
   const videoId = getYouTubeVideoId(url);
 
@@ -81,18 +101,21 @@ function addVideo() {
   if (!title) {
     errorMessage.textContent =
       "登録名を入力してください。";
+
     return;
   }
 
   if (!videoId) {
     errorMessage.textContent =
       "正しいYouTubeのURLを入力してください。";
+
     return;
   }
 
   const newVideo = {
     id: crypto.randomUUID(),
     title,
+    yomi,
     youtubeId: videoId
   };
 
@@ -102,7 +125,10 @@ function addVideo() {
   renderVideoList();
 
   videoTitleInput.value = "";
+  videoYomiInput.value = "";
   youtubeUrlInput.value = "";
+
+  videoTitleInput.focus();
 }
 
 function playVideo(video) {
@@ -113,10 +139,13 @@ function playVideo(video) {
   youtubePlayer.style.display = "block";
 
   emptyMessage.style.display = "none";
-  playingTitle.textContent = video.title;
+
+  if (playingTitle) {
+    playingTitle.textContent = video.title;
+  }
 }
 
-function editVideoTitle(videoId) {
+function editVideo(videoId) {
   const video = videos.find(
     (item) => item.id === videoId
   );
@@ -126,7 +155,7 @@ function editVideoTitle(videoId) {
   }
 
   const newTitle = prompt(
-    "新しいタイトルを入力してください。",
+    "新しい登録名を入力してください。",
     video.title
   );
 
@@ -137,11 +166,21 @@ function editVideoTitle(videoId) {
   const trimmedTitle = newTitle.trim();
 
   if (!trimmedTitle) {
-    alert("タイトルは空欄にできません。");
+    alert("登録名は空欄にできません。");
+    return;
+  }
+
+  const newYomi = prompt(
+    "新しいよみがなを入力してください。",
+    video.yomi || ""
+  );
+
+  if (newYomi === null) {
     return;
   }
 
   video.title = trimmedTitle;
+  video.yomi = newYomi.trim();
 
   saveVideos();
   renderVideoList();
@@ -149,7 +188,10 @@ function editVideoTitle(videoId) {
   const currentVideoId =
     youtubePlayer.dataset.currentVideoId;
 
-  if (currentVideoId === videoId) {
+  if (
+    currentVideoId === videoId &&
+    playingTitle
+  ) {
     playingTitle.textContent = trimmedTitle;
   }
 }
@@ -183,9 +225,57 @@ function deleteVideo(videoId) {
     youtubePlayer.dataset.currentVideoId = "";
 
     emptyMessage.style.display = "block";
-    playingTitle.textContent =
-      "再生中の動画はありません";
+
+    if (playingTitle) {
+      playingTitle.textContent =
+        "再生中の動画はありません";
+    }
   }
+
+  saveVideos();
+  renderVideoList();
+}
+
+function normalizeSortText(text) {
+  return String(text || "")
+    .trim()
+    .normalize("NFKC");
+}
+
+function sortVideosByYomi() {
+  videos.sort((a, b) => {
+    const aSortText = normalizeSortText(
+      a.yomi || a.title
+    );
+
+    const bSortText = normalizeSortText(
+      b.yomi || b.title
+    );
+
+    const yomiResult = aSortText.localeCompare(
+      bSortText,
+      "ja",
+      {
+        sensitivity: "base",
+        numeric: true
+      }
+    );
+
+    if (yomiResult !== 0) {
+      return yomiResult;
+    }
+
+    return normalizeSortText(
+      a.title
+    ).localeCompare(
+      normalizeSortText(b.title),
+      "ja",
+      {
+        sensitivity: "base",
+        numeric: true
+      }
+    );
+  });
 
   saveVideos();
   renderVideoList();
@@ -213,6 +303,13 @@ function renderVideoList() {
     videoName.className = "videoName";
     videoName.textContent = video.title;
 
+    if (video.yomi) {
+      videoName.title = `よみがな：${video.yomi}`;
+    } else {
+      videoName.title =
+        "よみがな未登録：登録名を基準に並び替えます";
+    }
+
     const playButton = document.createElement("button");
     playButton.textContent = "再生";
 
@@ -221,10 +318,10 @@ function renderVideoList() {
     });
 
     const editButton = document.createElement("button");
-    editButton.textContent = "名前編集";
+    editButton.textContent = "編集";
 
     editButton.addEventListener("click", () => {
-      editVideoTitle(video.id);
+      editVideo(video.id);
     });
 
     const deleteButton = document.createElement("button");
@@ -245,12 +342,22 @@ function renderVideoList() {
 }
 
 addButton.addEventListener("click", addVideo);
+sortButton.addEventListener("click", sortVideosByYomi);
 
 youtubeUrlInput.addEventListener(
   "keydown",
   (event) => {
     if (event.key === "Enter") {
       addVideo();
+    }
+  }
+);
+
+videoYomiInput.addEventListener(
+  "keydown",
+  (event) => {
+    if (event.key === "Enter") {
+      youtubeUrlInput.focus();
     }
   }
 );

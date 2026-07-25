@@ -32,9 +32,9 @@ h1 {
 }
 
 .pageLayout {
-    display: grid;
-    grid-template-columns: minmax(0,1fr) 520px;
-    gap: 18px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 520px;
+  gap: 18px;
 }
 
 .rightColumn {
@@ -62,6 +62,32 @@ h1 {
   min-height: 400px;
   max-height: calc(100vh - 420px);
   overflow-y: auto;
+}
+
+.listHeader {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.listHeader h2 {
+  margin: 0;
+}
+
+#sortButton {
+  padding: 8px 14px;
+  color: #ffffff;
+  font-weight: bold;
+  cursor: pointer;
+  background: #303540;
+  border: none;
+  border-radius: 7px;
+}
+
+#sortButton:hover {
+  background: #414754;
 }
 
 .videoWrapper {
@@ -201,6 +227,15 @@ h1 {
   .registerArea,
   .listArea {
     padding: 15px;
+  }
+
+  .listHeader {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  #sortButton {
+    width: 100%;
   }
 
   .videoItem {
