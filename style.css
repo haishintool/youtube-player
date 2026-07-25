@@ -20,13 +20,25 @@ input {
 }
 
 .app {
-  width: min(100%, 1000px);
+  width: min(100%, 1400px);
   margin: 0 auto;
 }
 
 h1 {
   margin-top: 0;
+  margin-bottom: 28px;
   text-align: center;
+}
+
+.pageLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 18px;
+  align-items: start;
+}
+
+.leftColumn {
+  min-width: 0;
 }
 
 .playerArea,
@@ -36,6 +48,16 @@ h1 {
   padding: 24px;
   background: #1c1f26;
   border-radius: 14px;
+}
+
+.playerArea {
+  margin-bottom: 18px;
+}
+
+.listArea {
+  max-height: calc(100vh - 130px);
+  margin-bottom: 0;
+  overflow-y: auto;
 }
 
 .videoWrapper {
@@ -104,6 +126,10 @@ h1 {
   border-radius: 8px;
 }
 
+#addButton:hover {
+  background: #dddddd;
+}
+
 #errorMessage {
   min-height: 24px;
   margin: 0;
@@ -122,6 +148,7 @@ h1 {
 
 .videoName {
   flex: 1;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -144,9 +171,23 @@ h1 {
   background: #7c2e35;
 }
 
+.videoItem .deleteButton:hover {
+  background: #963841;
+}
+
 .emptyList {
   color: #aaaaaa;
   text-align: center;
+}
+
+@media (max-width: 900px) {
+  .pageLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .listArea {
+    max-height: none;
+  }
 }
 
 @media (max-width: 600px) {
@@ -168,26 +209,4 @@ h1 {
     width: 100%;
     flex-basis: 100%;
   }
-  .mainContent {
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
-  gap: 24px;
-  align-items: start;
-}
-
-.mainContent .playerArea,
-.mainContent .listArea {
-  margin-bottom: 0;
-}
-
-.listArea {
-  max-height: 700px;
-  overflow-y: auto;
-}
-.pageLayout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 280px;
-  gap: 18px;
-  align-items: start;
-}
 }
