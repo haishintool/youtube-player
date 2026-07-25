@@ -67,14 +67,19 @@ button {
     minmax(0, 1fr) 500px;
 
   gap: 20px;
+
+  align-items: stretch;
 }
 
 .rightColumn {
   display: flex;
   flex-direction: column;
+
   gap: 0;
+
   min-width: 0;
-  align-self: start;
+
+  height: 100%;
 }
 
 
@@ -418,8 +423,7 @@ button {
 }
 
 .listArea {
-  min-height: 400px;
-  max-height: calc(100vh - 440px);
+  flex: 1;
   overflow-y: auto;
 
   scrollbar-color:
