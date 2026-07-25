@@ -38,9 +38,11 @@ h1 {
 }
 
 .rightColumn {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 18px;
   min-width: 0;
+  align-self: start;
 }
 
 .playerArea,
@@ -133,9 +135,7 @@ h1 {
 }
 
 #errorMessage {
-  min-height: 24px;
-  margin: 0;
-  color: #ff7070;
+  display: none;
 }
 
 .videoItem {
