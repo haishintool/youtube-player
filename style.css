@@ -56,7 +56,7 @@ button {
 }
 
 .app {
-  width: calc(100vw - 24px);
+  width: calc(100vw - 40px);
   max-width: none;
   margin: 0 auto;
 }
@@ -64,9 +64,9 @@ button {
 .pageLayout {
   display: grid;
   grid-template-columns:
-    minmax(0, 1fr) 520px;
+    minmax(0, 1fr) 500px;
 
-  gap: 18px;
+  gap: 20px;
 }
 
 .rightColumn {
