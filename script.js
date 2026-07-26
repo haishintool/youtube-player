@@ -43,6 +43,23 @@ const listTabPanel =
 const TAB_STORAGE_KEY =
   "youtubePlayerActiveTab";
 
+/* =========================================================
+   SET LIST TOOL連携
+========================================================= */
+
+const SETLIST_STORAGE_KEY =
+  "setlistToolState";
+
+const SETLIST_CHANNEL_NAME =
+  "setlistToolSync";
+
+const setlistChannel =
+  "BroadcastChannel" in window
+    ? new BroadcastChannel(
+        SETLIST_CHANNEL_NAME
+      )
+    : null;
+
 let videos = loadVideos();
 let sortable = null;
 
@@ -385,6 +402,8 @@ function playVideo(video) {
   playingTitle.textContent =
     video.title;
 
+  updateNowPlaying(video.title);
+
   renderVideoList();
 }
 
@@ -438,6 +457,8 @@ function editVideo(videoId) {
   if (currentVideoId === videoId) {
     playingTitle.textContent =
       trimmedTitle;
+
+    updateNowPlaying(trimmedTitle);
   }
 }
 
@@ -473,6 +494,8 @@ function deleteVideo(videoId) {
 
     playingTitle.textContent =
       "再生中の動画はありません";
+
+    updateNowPlaying("");
   }
 
   saveVideos();
@@ -778,6 +801,63 @@ function renderVideoList() {
     );
   });
 }
+
+/* =========================================================
+   SET LIST TOOL連携処理
+========================================================= */
+
+function loadSetlistState() {
+  const savedState =
+    localStorage.getItem(
+      SETLIST_STORAGE_KEY
+    );
+
+  if (!savedState) {
+    return {};
+  }
+
+  try {
+    const parsedState =
+      JSON.parse(savedState);
+
+    return parsedState &&
+      typeof parsedState === "object"
+      ? parsedState
+      : {};
+  } catch (error) {
+    console.warn(
+      "セットリストデータの読み込みに失敗しました。",
+      error
+    );
+
+    return {};
+  }
+}
+
+function updateNowPlaying(title) {
+  const setlistState =
+    loadSetlistState();
+
+  const updatedState = {
+    ...setlistState,
+    currentSong:
+      String(title ?? "").trim()
+  };
+
+  localStorage.setItem(
+    SETLIST_STORAGE_KEY,
+    JSON.stringify(updatedState)
+  );
+
+  setlistChannel?.postMessage({
+    type: "stateUpdate",
+    state: updatedState
+  });
+}
+
+/* =========================================================
+   イベント
+========================================================= */
 
 registerTabButton.addEventListener(
   "click",
