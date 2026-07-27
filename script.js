@@ -50,18 +50,19 @@ const TAB_STORAGE_KEY =
    SET LIST TOOL連携
 ========================================================= */
 
-const SETLIST_STORAGE_KEY =
-  "setlistToolState";
+const API_BASE_URL =
+  "https://setlist-api.halismvoice.workers.dev";
 
-const SETLIST_CHANNEL_NAME =
-  "setlistToolSync";
+const urlParams =
+  new URLSearchParams(window.location.search);
 
-const setlistChannel =
-  "BroadcastChannel" in window
-    ? new BroadcastChannel(
-        SETLIST_CHANNEL_NAME
-      )
-    : null;
+const roomId =
+  urlParams.get("id");
+
+const ROOM_API_URL =
+  roomId
+    ? `${API_BASE_URL}/room/${encodeURIComponent(roomId)}`
+    : "";
 
 let videos = loadVideos();
 let sortable = null;
@@ -820,27 +821,23 @@ function renderVideoList() {
    SET LIST TOOL連携処理
 ========================================================= */
 
-function loadSetlistState() {
-  const savedState =
-    localStorage.getItem(
-      SETLIST_STORAGE_KEY
-    );
-
-  if (!savedState) {
+async function loadSetlistState() {
+  if (!ROOM_API_URL) {
     return {};
   }
 
   try {
-    const parsedState =
-      JSON.parse(savedState);
+    const response =
+      await fetch(ROOM_API_URL);
 
-    return parsedState &&
-      typeof parsedState === "object"
-      ? parsedState
-      : {};
+    if (!response.ok) {
+      return {};
+    }
+
+    return await response.json();
   } catch (error) {
-    console.warn(
-      "セットリストデータの読み込みに失敗しました。",
+    console.error(
+      "セットリスト取得失敗",
       error
     );
 
@@ -848,24 +845,24 @@ function loadSetlistState() {
   }
 }
 
-function updateNowPlaying(title) {
-  const setlistState =
-    loadSetlistState();
+async function updateNowPlaying(title) {
+  if (!ROOM_API_URL) {
+    return;
+  }
 
-  const updatedState = {
-    ...setlistState,
-    currentSong:
-      String(title ?? "").trim()
-  };
+  const state =
+    await loadSetlistState();
 
-  localStorage.setItem(
-    SETLIST_STORAGE_KEY,
-    JSON.stringify(updatedState)
-  );
+  state.currentSong =
+    String(title ?? "").trim();
 
-  setlistChannel?.postMessage({
-    type: "stateUpdate",
-    state: updatedState
+  await fetch(ROOM_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type":
+        "application/json",
+    },
+    body: JSON.stringify(state),
   });
 }
 
@@ -905,15 +902,95 @@ sortButton.addEventListener(
 
 addToSetlistButton?.addEventListener(
   "click",
-  () => {
+  async () => {
+    if (!ROOM_API_URL) {
+      console.error(
+        "部屋IDがありません。"
+      );
+
+      return;
+    }
+
+    const title =
+      String(
+        playingTitle?.textContent ?? ""
+      ).trim();
+
+    if (!title) {
+      return;
+    }
+
+    addToSetlistButton.disabled =
+      true;
+
     addToSetlistButton.textContent =
-      "✓ 追加しました";
+      "追加中…";
 
-    addToSetlistButton.classList.add(
-      "isAdded"
-    );
+    try {
+      const state =
+        await loadSetlistState();
 
-    addToSetlistButton.disabled = true;
+      const songs =
+        Array.isArray(state.songs)
+          ? state.songs
+          : [];
+
+      const updatedState = {
+        ...state,
+        songs: [
+          ...songs,
+          title,
+        ],
+        currentSong: "",
+      };
+
+      const response =
+        await fetch(
+          ROOM_API_URL,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+            body: JSON.stringify(
+              updatedState
+            ),
+          }
+        );
+
+      if (!response.ok) {
+        throw new Error(
+          `保存失敗: ${response.status}`
+        );
+      }
+
+      addToSetlistButton.textContent =
+        "✓ 追加しました";
+
+      addToSetlistButton.classList.add(
+        "isAdded"
+      );
+
+if (playingTitle) {
+  playingTitle.textContent = "";
+}
+
+youtubePlayer.dataset.currentVideoId =
+  "";
+  
+    } catch (error) {
+      console.error(
+        "セットリストへの追加に失敗しました。",
+        error
+      );
+
+      addToSetlistButton.textContent =
+        "追加に失敗しました";
+
+      addToSetlistButton.disabled =
+        false;
+    }
   }
 );
 
