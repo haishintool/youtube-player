@@ -850,20 +850,31 @@ async function updateNowPlaying(title) {
     return;
   }
 
-  const state =
+  const latestState =
     await loadSetlistState();
 
-  state.currentSong =
-    String(title ?? "").trim();
+  const updatedState = {
+    ...latestState,
+    currentSong:
+      String(title ?? "").trim()
+  };
 
-  await fetch(ROOM_API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type":
-        "application/json",
-    },
-    body: JSON.stringify(state),
-  });
+  const response =
+    await fetch(ROOM_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type":
+          "application/json"
+      },
+      body:
+        JSON.stringify(updatedState)
+    });
+
+  if (!response.ok) {
+    throw new Error(
+      `Now Playingの更新に失敗しました: ${response.status}`
+    );
+  }
 }
 
 /* =========================================================
