@@ -407,6 +407,13 @@ playingTitle.textContent =
 
 if (addToSetlistButton) {
   addToSetlistButton.hidden = false;
+  addToSetlistButton.disabled = false;
+  addToSetlistButton.textContent =
+    "セットリストに追加";
+
+  addToSetlistButton.classList.remove(
+    "isAdded"
+  );
 }
 
 updateNowPlaying(video.title);
@@ -894,6 +901,20 @@ addButton.addEventListener(
 sortButton.addEventListener(
   "click",
   sortVideosByYomi
+);
+
+addToSetlistButton?.addEventListener(
+  "click",
+  () => {
+    addToSetlistButton.textContent =
+      "✓ 追加しました";
+
+    addToSetlistButton.classList.add(
+      "isAdded"
+    );
+
+    addToSetlistButton.disabled = true;
+  }
 );
 
 youtubeUrlInput.addEventListener(

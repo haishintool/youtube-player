@@ -953,3 +953,22 @@ button {
 #addToSetlistButton:active {
   transform: translateY(1px);
 }
+
+#addToSetlistButton.isAdded {
+  border-color: rgba(70, 210, 120, 0.95);
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(45, 190, 105, 0.35),
+      rgba(15, 90, 50, 0.4)
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+    0 0 24px rgba(45, 210, 110, 0.25);
+
+  cursor: default;
+}
