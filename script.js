@@ -25,6 +25,9 @@ const emptyMessage =
 const playingTitle =
   document.getElementById("playingTitle");
 
+const addToSetlistButton =
+  document.getElementById("addToSetlistButton");
+
 const errorMessage =
   document.getElementById("errorMessage");
 
@@ -399,10 +402,14 @@ function playVideo(video) {
   emptyMessage.style.display =
     "none";
 
-  playingTitle.textContent =
-    video.title;
+playingTitle.textContent =
+  video.title;
 
-  updateNowPlaying(video.title);
+if (addToSetlistButton) {
+  addToSetlistButton.hidden = false;
+}
+
+updateNowPlaying(video.title);
 
   renderVideoList();
 }
