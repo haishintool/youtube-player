@@ -13,6 +13,21 @@ const addButton =
 const sortButton =
   document.getElementById("sortButton");
 
+const exportPlaylistButton =
+  document.getElementById(
+    "exportPlaylistButton"
+  );
+
+const importPlaylistButton =
+  document.getElementById(
+    "importPlaylistButton"
+  );
+
+const importPlaylistInput =
+  document.getElementById(
+    "importPlaylistInput"
+  );  
+
 const videoListElement =
   document.getElementById("videoList");
 
@@ -388,6 +403,40 @@ function addVideo() {
   youtubeUrlInput.value = "";
 
   switchTab("list");
+}
+
+function exportPlaylist() {
+  const data = JSON.stringify(videos, null, 2);
+
+  const blob = new Blob([data], {
+    type: "application/json"
+  });
+
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+
+  const today = new Date();
+
+  const fileName =
+    `playlist-${
+      today.getFullYear()
+    }-${
+      String(
+        today.getMonth() + 1
+      ).padStart(2, "0")
+    }-${
+      String(
+        today.getDate()
+      ).padStart(2, "0")
+    }.json`;
+
+  link.href = url;
+  link.download = fileName;
+
+  link.click();
+
+  URL.revokeObjectURL(url);
 }
 
 function playVideo(video) {
@@ -909,6 +958,11 @@ addButton.addEventListener(
 sortButton.addEventListener(
   "click",
   sortVideosByYomi
+);
+
+exportPlaylistButton?.addEventListener(
+  "click",
+  exportPlaylist
 );
 
 addToSetlistButton?.addEventListener(
