@@ -140,6 +140,31 @@
             リストに登録
           </button>
 
+          <div class="playlistTransferActions">
+  <button
+    type="button"
+    id="exportPlaylistButton"
+    class="secondaryButton"
+  >
+    📤 プレイリストを書き出す
+  </button>
+
+  <button
+    type="button"
+    id="importPlaylistButton"
+    class="secondaryButton"
+  >
+    📥 プレイリストを読み込む
+  </button>
+
+  <input
+    id="importPlaylistInput"
+    type="file"
+    accept="application/json,.json"
+    hidden
+  />
+</div>
+
           <p
             id="errorMessage"
             aria-live="polite"
