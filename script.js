@@ -439,6 +439,42 @@ function exportPlaylist() {
   URL.revokeObjectURL(url);
 }
 
+async function importPlaylist() {
+  const file =
+    importPlaylistInput?.files?.[0];
+
+  if (!file) {
+    return;
+  }
+
+  const text = await file.text();
+
+  try {
+    const importedVideos =
+      JSON.parse(text);
+
+    if (!Array.isArray(importedVideos)) {
+      throw new Error();
+    }
+
+    videos.length = 0;
+    videos.push(...importedVideos);
+
+    saveVideos();
+    renderVideoList();
+
+    importPlaylistInput.value = "";
+
+    alert(
+      "プレイリストを読み込みました。"
+    );
+  } catch {
+    alert(
+      "プレイリストを読み込めませんでした。"
+    );
+  }
+}
+
 function playVideo(video) {
   youtubePlayer.src =
     `https://www.youtube.com/embed/${video.youtubeId}?autoplay=1`;
@@ -963,6 +999,27 @@ sortButton.addEventListener(
 exportPlaylistButton?.addEventListener(
   "click",
   exportPlaylist
+);
+
+importPlaylistButton?.addEventListener(
+  "click",
+  () => {
+    if (
+      videos.length > 0 &&
+      !confirm(
+        "現在のプレイリストを置き換えますか？"
+      )
+    ) {
+      return;
+    }
+
+    importPlaylistInput?.click();
+  }
+);
+
+importPlaylistInput?.addEventListener(
+  "change",
+  importPlaylist
 );
 
 addToSetlistButton?.addEventListener(
